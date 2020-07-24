@@ -1,4 +1,4 @@
-import firebase from 'react-native-firebase'
+import messaging from '@react-native-firebase/messaging'
 import { Alert, AppState, Linking } from 'react-native'
 import _ from 'lodash'
 
@@ -41,6 +41,7 @@ class PushNotification {
 
   static configure(options) {
 
+    /*
     // Notification was received in the background (and opened by a user)
     notificationOpenedListener = firebase.notifications()
       .onNotificationOpened(notificationOpen => {
@@ -58,7 +59,7 @@ class PushNotification {
     })
 
     // data message was received in the foreground
-    dataListener = firebase.messaging()
+    dataListener = messaging()
       .onMessage(remoteMessage => {
         // in the current implementation, server sends both
         // "notification + data" and "data-only" messages (with the same data),
@@ -78,7 +79,7 @@ class PushNotification {
     //     // User has rejected permissions
     //   })
 
-    firebase.messaging().hasPermission()
+    messaging().hasPermission()
       .then(enabled => {
 
         if (!enabled) {
@@ -100,9 +101,9 @@ class PushNotification {
                     // Check again if notifications have been enabled
                     if (nextState === 'active') {
                       AppState.removeEventListener('change', appStateChangeListener)
-                      firebase.messaging().hasPermission()
+                      messaging().hasPermission()
                         .then(enabled => {
-                          firebase.messaging()
+                          messaging()
                             .getToken()
                             .then(fcmToken => {
                               if (fcmToken) {
@@ -124,7 +125,7 @@ class PushNotification {
             }
           )
         } else {
-          firebase.messaging()
+          messaging()
             .getToken()
             .then(fcmToken => {
               if (fcmToken) {
@@ -136,7 +137,7 @@ class PushNotification {
       })
       .catch(e => console.log(e))
 
-    tokenRefreshListener = firebase.messaging()
+    tokenRefreshListener = messaging()
       .onTokenRefresh(fcmToken => options.onRegister(fcmToken))
 
     const serviceUpdatesChannel = new firebase.notifications.Android.Channel(
@@ -145,6 +146,16 @@ class PushNotification {
       firebase.notifications.Android.Importance.Max)
       .setDescription('CoopCycle Service Updates');
     firebase.notifications().android.createChannel(serviceUpdatesChannel);
+    */
+
+    // https://rnfirebase.io/messaging/usage
+    // On Android, you do not need to request user permission.
+    messaging()
+      .getToken()
+      .then(fcmToken => {
+        console.log(fcmToken)
+      })
+
   }
 
   static removeListeners() {
